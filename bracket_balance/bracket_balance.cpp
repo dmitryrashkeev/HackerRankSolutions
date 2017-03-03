@@ -26,7 +26,7 @@ bool is_balanced(std::string expr) {
 }
 
 int main() {
-	int n;
+	unsigned int n;
 	std::cin >> n;
 	for (auto i = 0u; i < n; ++i) {
 		std::string expr;
