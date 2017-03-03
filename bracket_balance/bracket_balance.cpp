@@ -16,12 +16,9 @@ bool is_balanced(std::string expr) {
 		if (c == '(' || c == '{' || c == '[') {
 			bracket_stack.push(c);
 		}
-		else if (!bracket_stack.empty()) {
-
-			if (braces_match(bracket_stack.top(), c)) {
-				bracket_stack.pop();
-			}
-		}
+		else if (!bracket_stack.empty() && braces_match(bracket_stack.top(), c)) {
+			bracket_stack.pop();
+		}  
 		else return false;
 	}
 	if (bracket_stack.empty()) return true;
