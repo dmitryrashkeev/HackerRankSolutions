@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <utility>
 
 
 
@@ -12,7 +13,7 @@ void swap(T& a, T& b, C& counter) {
 }
 
 template <typename T, typename C>
-bool compare(const T& a, const T& b, C& counter, ) {
+bool compare(const T& a, const T& b, C& counter) {
 	++counter;
 	if (a > b) {
 		return true;
@@ -38,11 +39,6 @@ std::pair<int, int> bubble_sort(Iter begin, Iter end) {
 		}
 	} while (numSwaps > prevNumSwaps);
 
-	//for (auto i = begin; i < end; ++i) {
-	//	std::cout << *i << " ";
-	//}
-	//std::cout << std::endl;
-
 	return std::make_pair(numSwaps, numComps);
 }
 
@@ -56,8 +52,11 @@ int main() {
 	}
 	auto result = bubble_sort(a.begin(),a.end());
 	std::cout << "Array is sorted in " << result.first << " swaps with " << result.second << " comparisons" << std::endl;
-	std::cout << "First Element: " << a[0] << std::endl;
-	std::cout << "Last Element: " << *(a.end()-1) << std::endl;
+	std::cout << "Array contents: ";
+	for (const auto& i : a) {
+		std::cout << i << " ";
+	}
+	std::cout << std::endl;
 
 	return 0;
 }
