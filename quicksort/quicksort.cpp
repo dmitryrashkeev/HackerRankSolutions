@@ -27,7 +27,7 @@ std::pair<int, int> quick_sort(Iter begin, Iter end) {
 			--j;
 		}
 		if (i <= j) {
-			swap(*i, *j, numSwaps);
+			if(i != j) swap(*i, *j, numSwaps);	
 			++i;
 			--j;
 		}
