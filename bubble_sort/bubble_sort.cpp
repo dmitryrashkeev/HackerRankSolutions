@@ -1,27 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <utility>
-
-
-
-template <typename T, typename C>
-void swap(T& a, T& b, C& counter) {
-	++counter;
-	T c = a;
-	a = b;
-	b = c;
-}
-
-template <typename T, typename C>
-bool compare(const T& a, const T& b, C& counter) {
-	++counter;
-	if (a > b) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
+#include "../sort_utils/sort_utils.h"
 
 template <typename Iter>
 std::pair<int, int> bubble_sort(Iter begin, Iter end) {
@@ -31,10 +11,10 @@ std::pair<int, int> bubble_sort(Iter begin, Iter end) {
 
 	do {
 		prevNumSwaps = numSwaps;
-		for (auto j = begin; j != endpoint; ++j) {
+		for (auto i = begin; i != endpoint; ++i) {
 
-			if (compare(*j, *(j+1), numComps)) {
-				swap(*j, *(j + 1), numSwaps);
+			if (compare(*i, *(i + 1), numComps)) {
+				swap(*i, *(i + 1), numSwaps);
 			}
 		}
 	} while (numSwaps > prevNumSwaps);
