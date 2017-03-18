@@ -1,15 +1,16 @@
 #include <iostream>
 #include <iterator>
 #include <vector>
-#include <utility>
 #include <algorithm>
-#include <typeinfo>
+#include <thread>
+#include <future>
+#include <random>
 #include "../sort_utils/sort_utils.h"
 
 
 template <typename Iter>
 std::pair<int, int> quick_sort(Iter begin, Iter end) {
-	if (end == begin + 1) return { 0,0 };
+	if (end <= begin + 1) return { 0,0 };
 	int numSwaps = 0;
 	int numComps = 0;
 	auto i = begin;
@@ -20,10 +21,10 @@ std::pair<int, int> quick_sort(Iter begin, Iter end) {
 
 	while (i <= j) {
 
-		while (compare<decltype(*i)>(*i, pivot, numComps,std::less_equal<decltype(*i)>())&& i < end-1) {
+		while (compare<decltype(*i)>(*i, pivot, numComps,std::less<decltype(*i)>()) && i < end-1) {
 			++i;
 		}
-		while (compare<decltype(*i)>(*j, pivot, numComps, std::greater<decltype(*i)>()) && j>begin) {
+		while (compare<decltype(*i)>(*j, pivot, numComps, std::greater<decltype(*i)>()) && j > begin ) {
 			--j;
 		}
 		if (i <= j) {
@@ -34,20 +35,31 @@ std::pair<int, int> quick_sort(Iter begin, Iter end) {
 			
 	}
 	auto out = std::make_pair(numSwaps, numComps);
-	if (begin < j)
-		out = out + quick_sort(begin, j + 1);
-	if (i < end-1)
-		out = out + quick_sort(i, end);
+
+	auto left_sort = std::async(std::launch::async, quick_sort<Iter>, begin, j + 1);
+	auto right_sort = std::async(std::launch::async, quick_sort<Iter>, i, end);
+	out = out + left_sort.get() + right_sort.get();
+
 	return out;
+
+	
 }
 
 
 int main() {
-	int n;
+	int n,m;
 	std::cin >> n;
-	std::vector<int> a(n);
+	std::vector<int> a;
+	a.reserve(n);
+	//for (auto i = 0; i < n; ++i) {
+	//	std::cin >> m;
+	//	a.push_back(m);
+	//}
+	std::random_device rd;
+	std::uniform_int_distribution<int> distribution(0, 100);
+	std::default_random_engine generator(rd());
 	for (auto i = 0; i < n; ++i) {
-		std::cin >> a[i];
+		a.push_back(distribution(generator));
 	}
 	auto result = quick_sort(a.begin(), a.end());
 	std::cout << "Array is sorted in " << result.first << " swaps with " << result.second << " comparisons" << std::endl;
