@@ -2,7 +2,6 @@
 #include <iterator>
 #include <vector>
 #include <algorithm>
-#include <thread>
 #include <future>
 #include <random>
 #include "../sort_utils/sort_utils.h"
@@ -29,16 +28,16 @@ std::pair<int, int> quick_sort(Iter begin, Iter end) {
 		}
 		if (i <= j) {
 			if(i != j) swap(*i, *j, numSwaps);	
-			++i;
-			--j;
+			if(i < end-1) ++i;
+			if(j > begin) --j;
 		}
 			
 	}
 	auto out = std::make_pair(numSwaps, numComps);
 
-	auto left_sort = std::async(std::launch::async, quick_sort<Iter>, begin, j + 1);
-	auto right_sort = std::async(std::launch::async, quick_sort<Iter>, i, end);
-	out = out + left_sort.get() + right_sort.get();
+	auto left_future = std::async(std::launch::async, quick_sort<Iter>, begin, j + 1);
+	auto right_future = std::async(std::launch::async, quick_sort<Iter>, i, end);
+	out = out + left_future.get() + right_future.get();
 
 	return out;
 
